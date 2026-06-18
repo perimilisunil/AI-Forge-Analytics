@@ -669,17 +669,17 @@ def main():
             st.plotly_chart(fig_m, use_container_width=True)
 
           
-            dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
-            fig_dm = px.bar(
+        dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
+        fig_dm = px.bar(
                 dm, x="department", y="cost_usd", color="model_name",
                 title="Cost Breakdown: Department × Model",
                 color_discrete_sequence=C, barmode="stack",
                 labels={"cost_usd":"Cost (USD)","department":"","model_name":"Model"},
             )
-            fig_dm.update_layout(height=400, **dark())
-            fig_dm.update_traces(marker_line_width=0,
+        fig_dm.update_layout(height=400, **dark())
+        fig_dm.update_traces(marker_line_width=0,
                                  hovertemplate="%{x}<br>%{fullData.name}: $%{y:,.3f}<extra></extra>")
-            st.plotly_chart(fig_dm, use_container_width=True)
+        st.plotly_chart(fig_dm, use_container_width=True)
 
         # Monthly trend
         st.markdown('<p class="sec-hdr">Month-over-Month Trend</p>', unsafe_allow_html=True)
@@ -710,16 +710,9 @@ def main():
                     unsafe_allow_html=True)
 
         ba = D["jira"].copy()
-    
         if dept != "All":
             ba = ba[ba["department"] == dept]
-    
-        ba_agg = (
-            ba.groupby(["department", "period"])["cycle_time_hours"]
-            .mean()
-            .reset_index()
-        )
-    
+        ba_agg = (ba.groupby(["department", "period"])["cycle_time_hours"].mean().reset_index())
         ba_agg.columns = ["department", "period", "mean_hours"]
         ba_agg["mean_hours"] = ba_agg["mean_hours"].round(1)
 
@@ -802,13 +795,10 @@ def main():
                 "cycle_improvement_pct": "{:.1f}%",
                 "throughput_lift_pct":   "{:.1f}%",
             }), use_container_width=True)
-
-
-        
         # Repo breakdown table
         st.markdown('<p class="sec-hdr">Repository Breakdown — PR Volume & Cycle Time</p>',
                     unsafe_allow_html=True)
-        if not gh_repos.empty:
+        if "gh_repos" in D and not gh_repos.empty:
             disp_repos = gh_repos.copy()
             if "avg_cycle" in disp_repos.columns:
                 disp_repos["avg_cycle"] = disp_repos["avg_cycle"].apply(lambda v: f"{v:.1f}h")
@@ -819,7 +809,7 @@ def main():
         # Top contributors
         st.markdown('<p class="sec-hdr">Top GitHub Contributors (by PRs Merged)</p>',
                     unsafe_allow_html=True)
-        if not gh_top.empty:
+        if "gh_top" in D and not gh_top.empty:
             disp_top = gh_top.copy()
             if "avg_cycle" in disp_top.columns:
                 disp_top["avg_cycle"] = disp_top["avg_cycle"].apply(lambda v: f"{v:.1f}h")
