@@ -706,23 +706,22 @@ def main():
     # TAB 3 — PRODUCTIVITY IMPACT
     # ───────────────────────────────────────────────────
     with t3:
-    st.markdown(
-        '<p class="sec-hdr">Jira Ticket Cycle Time: Before vs After AI</p>',
-        unsafe_allow_html=True)
+        st.markdown('<p class="sec-hdr">Jira Ticket Cycle Time: Before vs After AI</p>',
+                    unsafe_allow_html=True)
 
-    ba = D["jira"].copy()
-
-    if dept != "All":
-        ba = ba[ba["department"] == dept]
-
-    ba_agg = (
-        ba.groupby(["department", "period"])["cycle_time_hours"]
-        .mean()
-        .reset_index()
-    )
-
-    ba_agg.columns = ["department", "period", "mean_hours"]
-    ba_agg["mean_hours"] = ba_agg["mean_hours"].round(1)
+        ba = D["jira"].copy()
+    
+        if dept != "All":
+            ba = ba[ba["department"] == dept]
+    
+        ba_agg = (
+            ba.groupby(["department", "period"])["cycle_time_hours"]
+            .mean()
+            .reset_index()
+        )
+    
+        ba_agg.columns = ["department", "period", "mean_hours"]
+        ba_agg["mean_hours"] = ba_agg["mean_hours"].round(1)
 
             fig_ba = px.bar(
                 ba_agg, x="department", y="mean_hours", color="period",
