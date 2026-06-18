@@ -670,7 +670,7 @@ def main():
 
        
 
-        with col_u3:
+        with col_u4:
             dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
             fig_dm = px.bar(
                 dm, x="department", y="cost_usd", color="model_name",
