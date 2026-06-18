@@ -668,11 +668,11 @@ def main():
                                 customdata=model_agg[["total_cost"]].values)
             st.plotly_chart(fig_m, use_container_width=True)
 
-       
+       st.markdown('<p class="sec-hdr">Cost Breakdown: Department × Model</p>', unsafe_allow_html=True)
             dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
             fig_dm = px.bar(
                 dm, x="department", y="cost_usd", color="model_name",
-                title="Cost Breakdown: Department × Model",
+              
                 color_discrete_sequence=C, barmode="stack",
                 labels={"cost_usd":"Cost (USD)","department":"","model_name":"Model"},
             )
@@ -708,10 +708,6 @@ def main():
     with t3:
         st.markdown('<p class="sec-hdr">Jira Ticket Cycle Time: Before vs After AI</p>',
                     unsafe_allow_html=True)
-
-       
-
-        with col_p1:
             ba = D["jira"].copy()
             if dept != "All":
                 ba = ba[ba["department"] == dept]
@@ -836,7 +832,7 @@ def main():
 
         risk_df = logs[logs["risk_score"] > 0].copy()
 
-        col_g1, col_g2, col_g3 = st.columns([1.1, 1.9, 1])
+        col_g1, col_g2= st.columns(2)
 
         # Gauge
         with col_g1:
@@ -892,7 +888,6 @@ def main():
         # PII breakdown
         st.markdown('<p class="sec-hdr">PII Detection Breakdown by Department</p>',
                     unsafe_allow_html=True)
-        col_g4, col_g5 = st.columns(2)
         with col_g4:
             pii_dept = (
                 logs[logs["risk_flag"] == 1]
