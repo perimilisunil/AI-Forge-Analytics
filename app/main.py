@@ -668,7 +668,7 @@ def main():
                                 customdata=model_agg[["total_cost"]].values)
             st.plotly_chart(fig_m, use_container_width=True)
 
-       st.markdown('<p class="sec-hdr">Cost Breakdown: Department × Model</p>', unsafe_allow_html=True)
+          st.markdown('<p class="sec-hdr">Month-over-Month Trend</p>', unsafe_allow_html=True)
             dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
             fig_dm = px.bar(
                 dm, x="department", y="cost_usd", color="model_name",
