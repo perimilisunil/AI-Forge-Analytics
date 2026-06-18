@@ -1,223 +1,418 @@
-# 🔷 AIFORGE Analytics Platform
-### Enterprise AI Intelligence & ROI Measurement System
+# 🔷 AIFORGE: Enterprise AI Intelligence & Governance Platform
 
-> **B.Tech Major Project** — End-to-end data platform that bridges the gap between AI spending and measurable business value.
+![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white&style=for-the-badge)
+![Backend](https://img.shields.io/badge/Backend-Streamlit-red?logo=streamlit&logoColor=white&style=for-the-badge)
+![Engine](https://img.shields.io/badge/Engine-SQLite-003B57?logo=sqlite&logoColor=white&style=for-the-badge)
+![NLP](https://img.shields.io/badge/NLP-spaCy-09A3D5?logo=spacy&logoColor=white&style=for-the-badge)
+![Data](https://img.shields.io/badge/Data-Pandas-150458?logo=pandas&logoColor=white&style=for-the-badge)
+![Charts](https://img.shields.io/badge/Charts-Plotly-3F4F75?logo=plotly&logoColor=white&style=for-the-badge)
+![API](https://img.shields.io/badge/API-GitHub_REST_v3-181717?logo=github&logoColor=white&style=for-the-badge)
+
+> **A production-grade analytics engine for measuring the real return on enterprise AI investment.**
+
+AIFORGE is an end-to-end data intelligence platform that processes AI usage logs, project management tickets, and live GitHub engineering data to quantify productivity impact, surface security violations, and flag wasted software licences — turning anecdotal "AI is helping us" claims into defensible, board-ready numbers.
+
+---
+## 🚀 Live demo
+
+🔗 **Dashboard (Live):** [https://aiforgeanalytics.streamlit.app](https://aiforgeanalytics.streamlit.app)
+
+> **NOTE:** The dashboard is hosted on Streamlit's free tier and may occasionally crash or run out of memory.
+> If the site is down, please email `perimilisunil@gmail.com` and I will restart the app and ensure it runs as expected.
+> For better experience switch to **LIGHT MODE** , 
+---
+
+## 📖 Project Overview
+
+AIFORGE was built to answer a question almost every engineering leader is being asked right now: *"We pay for Copilot, ChatGPT, and Azure OpenAI — is it actually working?"* Most organizations have no answer beyond a feeling. AIFORGE replaces that feeling with measurement.
+
+The platform ingests three data streams — AI usage telemetry, Jira ticket history, and real GitHub Pull Request data — normalizes them into a relational schema, and runs them through a statistical and NLP analysis pipeline before surfacing everything in a 5-tab interactive dashboard. Its GitHub module deliberately targets **19 real, public, high-traffic repositories** rather than synthetic placeholders, using the public launch of GitHub Copilot (21 June 2022) as a genuine, independently verifiable Before/After boundary.
+
+Key characteristics:
+
+* End-to-end pipeline from raw API ingestion to boardroom-ready ROI figures.
+* Multi-layer PII detection combining NLP entity recognition with regex and keyword scanning.
+* Real, reproducible GitHub engineering data — not fabricated trend lines.
+* Privacy-first design — sensitive prompt text is redacted before any export touches disk.
+* Outputs focused on action: ranked licence-waste lists, risk dashboards, and exportable CSVs.
 
 ---
 
-## 🎯 The Problem
+## 💻 Technology Stack
 
-Organizations are in a **"GenAI Gold Rush"** — spending millions on AI licenses and API tokens while flying completely blind:
-
-- **The ROI Gap**: CFOs cannot verify if AI tools (GitHub Copilot, ChatGPT Enterprise) are increasing productivity or just producing "fast junk"
-- **The Security Risk**: Employees accidentally paste PII, API keys, and internal strategy into public LLMs — creating legal liabilities
-- **The Zombie Problem**: Up to 40% of AI licenses sit unused, burning budget with zero return
-
----
-
-## 💡 The Solution
-
-AIFORGE is a **Command Center** that:
-1. **Monitors** AI usage across all tools and teams
-2. **Calculates** the dollar value of time saved (Before vs After AI adoption)
-3. **Flags** security violations and PII leakage in real-time
-4. **Optimises** licence costs by identifying unused seats
+| Core Technologies | Component                       | Purpose                                          |
+| ------------------ | -------------------------------- | -------------------------------------------------- |
+| Runtime             | Python 3.11+                      | Core engine and pipeline orchestration             |
+| Data Engineering    | Pandas, NumPy                     | Vectorized transforms, feature engineering         |
+| Statistics          | SciPy, scikit-learn               | Pearson/Spearman correlation, OLS regression       |
+| NLP / Governance    | spaCy (`en_core_web_sm`)          | Named Entity Recognition for PII detection         |
+| Visualization        | Plotly Express & Graph Objects   | Dual-axis, gauge, treemap, diverging-bar charts    |
+| Database             | SQLite                            | Relational storage, PostgreSQL-compatible schema   |
+| External API          | PyGithub / Requests              | GitHub REST API v3 pagination & rate limiting      |
+| Web Framework          | Streamlit                        | Real-time dashboard with `@st.cache_data`          |
 
 ---
 
-## 🏗️ Architecture
+## 🎯 The Five-Tier Architecture
+
+### Tier 1 — Data Sources
+**Logic:** Three independent streams feed the system — live GitHub Pull Request data pulled from 19 real public repositories via REST API v3, AI usage telemetry (OpenAI/Azure export or synthetic), and Jira ticket history.
+**Impact:** Every downstream number traces back to a named, inspectable source — nothing is a black box.
+
+### Tier 2 — Ingestion & Governance
+**Logic:** Before any row reaches storage, it passes through the Governance Vault — a three-layer PII scanner — and the GitHub client, which labels every PR `Before` or `After` against a fixed, verifiable boundary: the GitHub Copilot public launch (21 June 2022).
+
+- **Layer 1 — spaCy NER:** flags `PERSON`, `ORG`, `GPE`, `MONEY` entities in AI prompts.
+- **Layer 2 — Regex:** seven compiled patterns catch emails, card numbers, SSNs, API keys (`sk-`, `ghp-`, `xoxb-`), IPs, and credential URLs.
+- **Layer 3 — Keywords:** 25+ terms (`confidential`, `merger`, `nda`) catch domain-specific risk the other two layers miss.
+
+**Impact:** A composite risk score (0–100) is attached to every prompt, and every PR carries a verifiable Before/After label, before either ever touches the database.
+
+### Tier 3 — Storage
+**Logic:** A normalized SQLite schema — `users_master`, `ai_usage_logs`, `jira_tickets_synthetic`, `github_metrics`, `analytics_cache` — with 13 indexes and a database-level `CHECK (period IN ('Before','After'))` constraint.
+**Impact:** Data integrity is enforced by the engine itself, not just application code — no row can silently corrupt the Before/After analysis.
+
+### Tier 4 — Analytics Engine
+**Logic:** Three engines run on top of storage — the **ROI Formula Engine** (converts cycle-time savings into dollar value per user), the **Statistical Engine** (Pearson, Spearman, OLS regression with R²), and the **Licence Classifier** (percentile-based, not fixed thresholds, so it adapts to any spend scale).
+**Impact:** Every user lands in one of five categories —   **⭐ Champion · ✅ Healthy · 💤 Underutilized · ⚠️ At-Risk · 🧟 Zombie** — based on measured output,not guesswork.
+
+### Tier 5 — Presentation
+**Logic:** A 5-tab Streamlit dashboard renders 40+ Plotly charts on top of a `@st.cache_data` layer, so the entire analytics pipeline runs once and every sidebar interaction reads from memory.
+**Impact:** Executives, security teams, and engineering leads each get a dedicated tab — Executive Overview, Usage Analytics, Productivity Impact, Governance & Security, and GitHub Intelligence — without re-running a single query.
+
+---
+
+## 🏗️ System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    DATA SOURCES                          │
-│  OpenAI/Azure Usage Logs  ·  Jira API  ·  GitHub API    │
-└─────────────────┬───────────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────────┐
-│                  INGESTION LAYER                         │
-│  src/jira/api_client.py  ·  src/github/api_client.py    │
-│  scripts/run_pipeline.py (orchestrator)                  │
-└─────────────────┬───────────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────────┐
-│              PROCESSING & GOVERNANCE LAYER               │
-│  src/governance/analyzer.py   (PII Detection — spaCy)   │
-│  src/governance/redactor.py   (Anonymisation)            │
-│  src/data/preprocessor.py     (Cleaning & Enrichment)   │
-└─────────────────┬───────────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────────┐
-│                  ANALYTICS ENGINE                        │
-│  src/analysis/metrics.py      (ROI, Risk Scores)        │
-│  src/analysis/correlation.py  (Spend vs Productivity)   │
-│  src/analysis/optimizer.py    (Zombie Licence Detection) │
-└─────────────────┬───────────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────────┐
-│               SQLite DATABASE                            │
-│  users_master · ai_usage_logs · jira_tickets_synthetic  │
-└─────────────────┬───────────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────────┐
-│                STREAMLIT DASHBOARD                       │
-│  app/main.py  →  5 tabs: Executive · Usage · Prod ·     │
-│                           Governance · Cost Optimisation │
-└─────────────────────────────────────────────────────────┘
+                        ┌────────────────────────────────────────────────────────────┐
+                        │                     Technology Stack                       │
+                        │ Runtime · Pandas/NumPy · SciPy · spaCy · Plotly · SQLite   │
+                        └────────────────────────────────────────────────────────────┘
+                                              ↓
+                        ┌────────────────────────────────────────────────────────────┐
+                        │ Data Sources                                               │
+                        │ ├─ GitHub REST API v3 (19 real public repos)               │
+                        │ ├─ AI Usage Logs                                           │
+                        │ └─ Jira Ticket History                                     │
+                        └────────────────────────────────────────────────────────────┘
+                                              ↓
+                        ┌────────────────────────────────────────────────────────────┐
+                        │ Ingestion & Governance (src/github, src/governance)        │
+                        │ ├─ PII Analyzer — spaCy NER + Regex + Keywords             │
+                        │ ├─ Redactor — masking + SHA-256 pseudonymisation           │
+                        │ └─ run_pipeline.py — Stage 1: PII · Stage 2: GitHub Sync   │
+                        └────────────────────────────────────────────────────────────┘
+                                              ↓
+                        ┌────────────────────────────────────────────────────────────┐
+                        │ Storage — SQLite (database/schema.sql)                     │
+                        │ users_master · ai_usage_logs · jira_tickets ·github_metrics│
+                        └────────────────────────────────────────────────────────────┘
+                                              ↓
+                        ┌────────────────────────────────────────────────────────────┐
+                        │ Analytics Engine (src/analysis, src/github/pr_analyzer)    │
+                        │ ├─ ROI Formula Engine                                      │
+                        │ ├─ Pearson / Spearman / OLS Regression                     │
+                        │ └─ 5-Category Licence Classifier                           │
+                        └────────────────────────────────────────────────────────────┘
+                                              ↓
+                        ┌────────────────────────────────────────────────────────────┐
+                        │ Intelligence Layer (app/main.py)                           │
+                        │ Streamlit Dashboard —  Tabs ·  Plotly Charts               │
+                        └────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ⚙️ Tech Stack
+## 📐 Installation & Setup
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| Language | Python 3.11+ | Core engine |
-| Data Wrangling | Pandas, NumPy | Cleaning, correlation math |
-| NLP / Security | spaCy (en_core_web_sm) | PII detection, NER |
-| Database | SQLite (dev) / PostgreSQL (prod) | Usage metadata storage |
-| Frontend | Streamlit + Plotly | Professional web dashboard |
-| Integrations | GitHub REST API v3 | PR / commit metrics |
-| Containerisation | Docker + Docker Compose | Reproducible deployment |
+**Prerequisites**
 
----
+* Python 3.11 or higher
+* A [GitHub Personal Access Token](https://github.com/settings/tokens) (scope: `public_repo`)
+* Git
 
-## 🚀 Quick Start
+**Quick Start**
 
-### 1. Clone and configure
 ```bash
-git clone https://github.com/yourname/aiforge-analytics.git
+# Clone the repository
+git clone https://github.com/yourusername/AIFORGE_ANALYTICS.git
 cd AIFORGE_ANALYTICS
-cp .env.example .env
-# Edit .env — add your GITHUB_TOKEN (personal access token, scope: public_repo)
-```
 
-### 2. Install dependencies
-```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
-python -m spacy download en_core_web_sm
-```
 
-### 3. Initialise database + generate synthetic data
-```bash
+# Add your GitHub token
+cp .env.example .env
+# edit .env → GITHUB_TOKEN=ghp_your_token_here
+
+# 1. Initialise database + seed synthetic data
 python scripts/setup_db.py
-```
-This seeds 100 users, 6,000 usage log entries, 3,500 Jira tickets (Before/After),
-and 19 × 120 = 2,280 synthetic GitHub PRs so the dashboard works immediately.
 
-### 4. Launch dashboard (synthetic data)
-```bash
+# 2. (Optional) Sync real GitHub PR data — 19 repos, ~3 minutes
+python scripts/run_pipeline.py --mode live
+
+# 3. Launch the dashboard
 streamlit run app/main.py
 ```
 
-### 5. Sync real GitHub PR data (live mode)
-```bash
-# Full sync — all 19 repos, ~7,600 real PRs, ~2 minutes
-python scripts/run_pipeline.py --mode live
+**Dependencies**
 
-# Or test with a single repo first
-python scripts/run_pipeline.py --mode github-only --repo microsoft/vscode --max-prs 200
 ```
-
-### 6. (Optional) Docker
-```bash
-docker-compose up --build
-# Dashboard at http://localhost:8501
+streamlit>=1.35.0
+pandas>=2.2.2
+numpy>=1.26.4
+plotly>=5.22.0
+spacy>=3.7.4
+scipy>=1.13.0
+scikit-learn>=1.5.0
+PyGithub>=2.3.0
+python-dotenv>=1.0.1
+faker>=25.2.0
+loguru>=0.7.2
+pytest>=8.2.2
 ```
 
 ---
 
-## 🗂️ GitHub Data Strategy
+## ✍️ Usage Guide
 
-No private organisation required. The platform fetches from **19 world-class
-public repos** mapped to 7 departments:
+**Dashboard Navigation**
 
-| Department | Repos |
-|---|---|
-| Engineering | microsoft/vscode · microsoft/TypeScript · electron/electron |
-| Frontend | facebook/react · vuejs/core · angular/angular |
-| Backend | django/django · fastapi/fastapi · expressjs/express |
-| DevOps | kubernetes/kubernetes · docker/compose · hashicorp/terraform |
-| Data Science | scikit-learn/scikit-learn · pandas-dev/pandas · pytorch/pytorch |
-| Security | OWASP/CheatSheetSeries · anchore/grype |
-| Mobile | flutter/flutter · facebook/react-native |
+1. **Sidebar Controls**
 
-**Before/After AI boundary:** GitHub Copilot public launch — **21 June 2022**.
-PRs merged before this date = "Before AI era". PRs after = "After AI era".
-This is real, verifiable, industry-documented — not fabricated.
+   * Department Filter: `dept` (selects a specific department or "All").
+   * Risk Level Filter: `risk_filter` — Low / Medium / High / Critical multi-select.
+   * Jira Period Filter: `period_opt` — Before / After / Both.
+   * GitHub Contributors Only: `github_only` toggle.
+
+2. **Tab Organization**
+
+   * **Tab 1 — Executive Overview**
+     - Daily token & spend trend (dual-axis)
+     - Spend and active users by department
+     - Department benchmark table
+   * **Tab 2 — Usage Analytics**
+     - Token distribution histogram
+     - Model usage and cost breakdown
+     - Day × Hour usage heatmap
+   * **Tab 3 — Productivity Impact**
+     - Before/After cycle time comparison (Jira)
+     - Story points vs cycle time (OLS regression)
+     - GitHub PR velocity trend with Copilot launch marker
+   * **Tab 4 — Governance & Security**
+     - Corporate Risk Index gauge
+     - Risk exposure treemap by department
+     - Forensic incident log — top 25 flagged prompts
+   * **Tab 5 — GitHub Intelligence**
+     - Monthly PR cycle time trend (real data, 19 repos)
+     - Rework ratio Before/After Copilot
+     - Top contributors and repository breakdown tables
+
+3. **Export Options**
+
+   - Processed CSVs: auto-written to `data/processed/` on every pipeline run.
+   - Synthetic seed data: exported to `data/synthetic/` by `setup_db.py`.
+   - All exports are PII-redacted and user IDs are SHA-256 pseudonymised.
 
 ---
 
-## 📁 Project Structure
+## API Example (Programmatic Access)
+
+```python
+import pandas as pd
+from src.analysis.optimizer import classify_users, optimisation_summary
+from src.data.loader import load_users, load_usage_logs, load_jira, load_github
+from src.data.preprocessor import compute_user_summary
+
+# Load and merge all sources
+users, logs, jira, github = load_users(), load_usage_logs(), load_jira(), load_github()
+user_summary = compute_user_summary(logs, jira, users, github)
+
+# Classify every user into Champion / Healthy / Underutilized / At-Risk / Zombie
+classified = classify_users(user_summary)
+summary = optimisation_summary(classified)
+
+print(f"Zombie users: {summary['zombie_count']}")
+print(f"Monthly savings opportunity: ${summary['total_monthly_saving']:,.2f}")
+```
+
+---
+
+## 🛎️ Key Features
+
+### Data Intelligence
+
+* [x] Unified Loader (`src/data/loader.py`): single point of database access with type coercion and CSV fallback.
+* [x] Feature Engineering (`preprocessor.py`): derives `hours_saved`, `dollar_value_saved`, `net_roi`, `pct_improvement`.
+* [x] Real GitHub Sync: paginated REST API client covering 19 repos with rate-limit checks.
+
+### Statistical & ML Analysis
+
+* [x] Pearson & Spearman correlation between AI spend and productivity output.
+* [x] OLS regression with R² reporting for spend-vs-ROI trendlines.
+* [x] Percentile-based 5-category licence classifier — adapts to any spend scale.
+
+### Visualization
+
+* [x] 40+ interactive Plotly charts: dual-axis trends, gauges, treemaps, diverging bars.
+* [x] Day × Hour usage heatmap and OLS-trendline scatter plots.
+* [x] Copilot-launch annotation markers on every GitHub time-series chart.
+
+### Governance & Security
+
+* [x] Three-layer PII detection — spaCy NER + 7 regex patterns + 25+ keywords.
+* [x] Composite risk scoring (0–100) with Low/Medium/High/Critical levels.
+* [x] Text redaction and SHA-256 user pseudonymisation before any export.
+
+### Production Readiness
+
+* [x] `@st.cache_data` caching layer for sub-second dashboard interactions.
+* [x] Docker + Docker Compose for one-command reproducible deployment.
+* [x] 44 automated unit tests covering ROI math and PII detection logic.
+
+---
+
+## 🔏 Privacy & Compliance
+
+**Data Protection Principles**
+
+* PII Redaction: detected emails, card numbers, SSNs, and API keys are masked before any CSV export.
+* Pseudonymisation: `user_id` values are replaced with deterministic SHA-256 hashes in exported files.
+* No Raw Prompt Exposure: the dashboard's forensic log truncates prompt text to 80 characters.
+* Transparency: every detection rule is defined in `src/governance/analyzer.py` and fully auditable.
+
+---
+
+## 📂 Project Structure
 
 ```
 AIFORGE_ANALYTICS/
-├── README.md                    # This file
-├── requirements.txt             # Python dependencies
-├── .env                         # API keys (never commit)
-├── .gitignore
-├── docker-compose.yml
-├── Dockerfile
+├── src/
+│   ├── config.py               # Central registry — 19 repos, Copilot date, constants
+│   ├── data/
+│   │   ├── loader.py            # Unified database access layer
+│   │   └── preprocessor.py      # Feature engineering + CSV export
+│   ├── governance/
+│   │   ├── analyzer.py          # PII detection — NER + regex + keywords
+│   │   └── redactor.py          # Masking + pseudonymisation
+│   ├── analysis/
+│   │   ├── metrics.py           # ROI formula engine
+│   │   ├── correlation.py       # Pearson / Spearman / OLS
+│   │   └── optimizer.py         # 5-category licence classifier
+│   ├── github/
+│   │   ├── api_client.py        # GitHub REST API pagination
+│   │   └── pr_analyzer.py       # Cycle time, rework ratio, velocity trend
+│   └── jira/
+│       ├── api_client.py
+│       └── ticket_analyzer.py
+├── scripts/
+│   ├── setup_db.py              # DB init + synthetic data generation
+│   └── run_pipeline.py          # Pipeline orchestrator (4 modes)
+├── app/
+│   ├── main.py                  # Streamlit dashboard — 5 tabs
+│   ├── pages/                   # 5 standalone page routes
+│   └── components/              # Reusable chart & KPI factories
+├── database/
+│   ├── schema.sql               # 5 tables, 13 indexes, CHECK constraints
+│   └── queries.sql              # Reference analytical SQL
+├── tests/
+│   ├── test_roi_math.py         # 16 ROI formula tests
+│   └── test_pii_detection.py    # 28 PII detection tests
 ├── data/
 │   ├── raw/                     # Raw API responses
-│   ├── processed/               # Cleaned data
-│   └── synthetic/               # Generated test data
-├── notebooks/                   # EDA and experiments
-├── scripts/
-│   ├── setup_db.py              # DB initialisation
-│   └── run_pipeline.py          # Full pipeline orchestrator
-├── database/
-│   ├── schema.sql               # Table definitions
-│   └── queries.sql              # Analytics JOINs
-├── src/
-│   ├── config.py                # Environment & constants
-│   ├── data/loader.py           # DB/CSV reader
-│   ├── data/preprocessor.py     # Cleaning logic
-│   ├── jira/api_client.py       # Jira integration
-│   ├── jira/ticket_analyzer.py  # Cycle time calculation
-│   ├── github/api_client.py     # GitHub integration
-│   ├── github/pr_analyzer.py    # PR metrics
-│   ├── governance/analyzer.py   # PII detection (spaCy)
-│   ├── governance/redactor.py   # Data masking
-│   └── analysis/
-│       ├── metrics.py           # ROI + Risk Score engine
-│       ├── correlation.py       # Spend vs productivity math
-│       └── optimizer.py         # Zombie licence detection
-└── app/
-    ├── main.py                  # Streamlit entry point
-    └── pages/                   # Tab-based pages
+│   ├── processed/               # Pipeline output CSVs
+│   └── synthetic/                # Auto-generated seed data
+├── docs/
+│   ├── architecture.md
+│   └── api_spec.md
+├── requirements.txt
+├── .env.example
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
 
-## 🔑 Environment Variables
+## 🛞 Performance Benchmarks
 
-| Variable | Required | Description |
-|---|---|---|
-| `GITHUB_TOKEN` | Yes | GitHub Personal Access Token |
-| `GITHUB_ORG` | Yes | Your GitHub organisation name |
-| `OPENAI_API_KEY` | Optional | For live token cost sync |
-| `DB_PATH` | Optional | SQLite path (default: database/aiforge.db) |
+**System Metrics (Local / Docker deployment)**
 
----
+| Metric                  |        Value | Notes                                  |
+| ------------------------ | ------------: | ---------------------------------------- |
+| Dashboard load (cached)   |   < 200ms     | Served from `@st.cache_data`, 10-min TTL |
+| Initial data load         |  2–4 seconds  | First load only — all JOINs + transforms |
+| GitHub sync (19 repos)    |   ~3 minutes  | ~76 API calls, well within 5,000/hr quota|
+| Synthetic data seed        |  < 30 seconds | 100 users, 6,000 logs, 3,500 tickets     |
+| Unit test suite            |   < 5 seconds | 44 tests, full coverage of core math     |
 
-## 📊 Key Metrics Calculated
+**Optimization Strategies**
 
-- **Net ROI** = (Hours Saved × Hourly Rate) − AI Licence Cost
-- **Efficiency Delta** = (Before Avg Cycle Time − After Avg Cycle Time) / Before × 100
-- **Risk Score** = Weighted sum of PII density, high-risk flag frequency, and prompt sensitivity
-- **Zombie Score** = High AI cost + zero productivity contribution (tickets/PRs)
-
----
-
-## 🎓 Academic Context
-
-This project was built as a B.Tech Major Project demonstrating:
-- Full-stack data engineering (ingestion → storage → analytics → visualisation)
-- Applied NLP for enterprise security (PII detection with Named Entity Recognition)
-- Causal analysis methodology (Before/After experimental design)
-- Software engineering best practices (modular architecture, unit tests, Docker)
+* `@st.cache_data`: avoids re-querying SQLite on every sidebar interaction.
+* Indexed schema: 13 indexes across high-cardinality lookup columns.
+* Bounded API pagination: `MAX_PRS_PER_REPO` caps sync time predictably.
+* In-memory filtering: sidebar filters operate on cached DataFrames, not SQL.
 
 ---
 
-## 📄 Licence
-MIT — for academic use.
+## 🛠️ Development Roadmap
+
+**Phase 1: Foundation**
+
+* [x] Database schema design (`schema.sql`) with Before/After CHECK constraints.
+* [x] Synthetic data generator with realistic department/role distributions.
+* [x] ROI formula engine (`metrics.py`).
+
+**Phase 2: Intelligence**
+
+* [x] Three-layer PII detection pipeline (`analyzer.py`).
+* [x] 19-repository GitHub integration with Copilot-launch boundary.
+* [x] 5-category percentile-based licence classifier.
+* [x] Pearson / Spearman / OLS statistical analysis.
+
+**Phase 3: Production (Current)**
+
+* [x] Theme-adaptive dashboard CSS (light/dark mode support).
+* [x] Docker + Docker Compose deployment.
+* [x] 44-test automated suite covering ROI and PII logic.
+* [ ] Real-time streaming ingestion (replace batch pipeline).
+* [ ] Fine-tuned enterprise PII model (replace generic spaCy model).
+
+---
+
+## 🧳 Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`).
+4. Run the test suite (`pytest tests/ -v`).
+5. Push to the branch and open a Pull Request.
+
+---
+
+## 📃 Acknowledgments
+
+**Built to make AI investment measurable, not anecdotal.**
+
+**Technical Inspiration:**
+
+* GitHub's public REST API and the broader open-source PR history it makes verifiable.
+* Streamlit's philosophy of "data apps in pure Python."
+* spaCy's industrial-strength NLP pipeline for entity recognition.
+
+---
+## 📥 Contact & Support
+
+### Project Maintainer
+**Sunil Kumar**  
+🔗 [GitHub](https://github.com/perimilisunil)  
+🔗 [LinkedIn](https://www.linkedin.com/in/perimili-sunil-kumar-bb22b3300?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)  
+📧 [perimilisunil@gmail.com](mailto:perimilisunil@gmail.com)
+
