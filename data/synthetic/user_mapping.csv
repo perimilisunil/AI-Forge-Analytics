@@ -1,0 +1,101 @@
+user_id,employee_name,department,role,license_type,hourly_rate,ai_adoption_date,employment_status,github_username
+USR6C09C87C611B,Joseph Nelson,Backend,Backend Lead,Enterprise,60.71,2022-02-24,Active,vwest
+USR20DF0FD1D0B2,Colin Harris,Data Science,Analytics Lead,Pro,97.0,2022-01-13,Active,wattsmarvin
+USRE3456ADAF722,Michelle Horne,DevOps,DevOps Engineer,Enterprise,93.93,2022-09-10,Active,alexa06
+USR3F86A3249669,Jennifer Barrett,Engineering,Staff Engineer,Enterprise,119.99,2022-01-03,Active,blake79
+USR02C43E55FE9A,Brittany Rosario,Frontend,Frontend Engineer,Pro,51.33,2022-05-11,Active,brian19
+USR0F6E5B188830,Joshua Harrison,Mobile,iOS Engineer,Enterprise,98.39,2022-01-17,Active,gibsonsusan
+USRD96D8629ADF6,Douglas Clements,Security,Security Lead,Enterprise,43.27,2022-04-24,Active,gcole
+USR7AFCD5C76F78,Zachary Wall,Backend,Backend Lead,Free,55.19,2022-01-28,Active,david83
+USR7A2B271B8D4C,James Harris,Data Science,Data Scientist,Pro,124.81,2022-02-09,Active,barry66
+USR4E94CF871FBD,Julie Foster,DevOps,SRE,Pro,73.87,2022-03-23,Active,danielrobinson
+USRC6EF5F2DEF90,Alexis Mcdonald,Engineering,Engineering Manager,Free,98.96,2022-03-08,Active,vanessavelasquez
+USR8F54ADE48657,Nancy Shaw,Frontend,Frontend Engineer,Enterprise,138.9,2022-09-06,Active,jeremiahedwards
+USRFEE96A37B9C3,Tamara Gutierrez,Mobile,Mobile Engineer,Pro,116.48,2022-03-30,Active,jreed
+USRFEE0D420ADE1,Christopher Smith,Security,AppSec Analyst,Pro,130.88,2022-08-09,Inactive,
+USR6DE9BFDB2756,Kimberly Williams,Backend,API Specialist,Enterprise,127.89,2022-09-07,Active,stephanie26
+USR00479B21F433,Debra Davidson,Data Science,ML Engineer,Enterprise,91.59,2022-08-16,Active,jarmstrong
+USR75E638B8902E,Laura House,DevOps,Platform Lead,Pro,139.74,2022-07-17,Active,lambertcynthia
+USRE0EEA779A6FE,Jared Allen,Engineering,Senior Engineer,Free,51.8,2022-09-22,Active,amaynard
+USR32844484EB74,Anna Freeman,Frontend,Frontend Engineer,Pro,84.15,2022-04-08,On-Leave,jeffreyhenderson
+USR5C55C0068C42,Ms. Katrina Brown,Mobile,Mobile Engineer,Pro,127.9,2022-04-14,Active,
+USRAF68EF5C5E81,Calvin Santos,Security,AppSec Analyst,Enterprise,82.64,2022-04-13,On-Leave,jcruz
+USR20865167F40F,Jennifer Gilbert,Backend,Backend Engineer,Pro,100.66,2022-09-06,Active,
+USR9E483FE7237E,Theresa Bryant,Data Science,Data Scientist,Enterprise,91.63,2022-07-25,Inactive,jmason
+USRA2DCF192CC30,Luke Cruz,DevOps,Platform Lead,Pro,132.56,2022-04-30,Active,
+USR8F3353B8A080,Kelsey Vincent,Engineering,Senior Engineer,Free,43.99,2022-07-08,Active,michaelpowell
+USR529BC98FC1A9,Joseph Tucker,Frontend,Frontend Lead,Pro,84.9,2022-08-02,Active,
+USR39884A3C0459,Lance Dougherty,Mobile,Android Engineer,Free,57.24,2022-07-29,Active,bbell
+USR643B5E0109A8,Donald Cochran,Security,Security Lead,Enterprise,139.49,2022-09-10,Active,mhall
+USR65C4E0D68B04,Emily Gallegos,Backend,Backend Lead,Pro,41.72,2022-01-09,Active,owensangela
+USRFC2FAD5E9D9C,Amber Reeves,Data Science,Data Scientist,Pro,109.32,2022-01-23,Active,
+USR54741B06F668,David Marshall,DevOps,DevOps Engineer,Free,59.99,2022-09-17,Active,
+USRCB72A5249041,Carol Young,Engineering,Engineering Manager,Enterprise,94.96,2022-07-03,Active,lindamccarthy
+USR79F5E7DEF712,Wendy Mueller,Frontend,UI/UX Engineer,Free,45.18,2022-06-17,Active,emily23
+USRD5FA632006C1,Russell Mcdonald,Mobile,iOS Engineer,Pro,105.7,2022-09-08,Active,smithlaurie
+USRF0E4A6BAF4BE,Maria Ferguson,Security,AppSec Analyst,Pro,46.47,2022-03-16,Active,cassandrasmith
+USR2732D7DCA1F5,Andrew Key,Backend,API Specialist,Enterprise,83.58,2022-01-30,Active,mathew19
+USR490CFE4D967F,Wesley Hawkins,Data Science,Analytics Lead,Enterprise,91.76,2022-01-06,On-Leave,nguyenrobert
+USRB6DE71699BF1,Timothy Jones,DevOps,DevOps Engineer,Enterprise,57.44,2022-06-05,Inactive,brownjames
+USRD3C89655973A,Eugene Walker,Engineering,Senior Engineer,Pro,62.85,2022-06-26,Active,kochjessica
+USRFBDD446A99E7,Veronica Rodriguez,Frontend,Frontend Lead,Free,93.36,2022-07-09,Active,brianchapman
+USRF691903C9072,John Stewart,Mobile,iOS Engineer,Enterprise,112.25,2022-01-24,Active,
+USR92218A5BB566,Terri Gordon,Security,Security Engineer,Enterprise,131.54,2022-07-26,Active,wrandolph
+USRAB955232873B,Mark Price,Backend,Backend Lead,Enterprise,97.48,2022-09-20,Inactive,hansonjonathan
+USREB436F83D2F0,Ryan Calderon,Data Science,ML Engineer,Enterprise,60.85,2022-08-19,Active,jason45
+USRF5E67BF85D6E,Susan Wise,DevOps,DevOps Engineer,Pro,89.89,2022-04-12,Active,jaythompson
+USR0E87CAE1273F,Isabella Smith,Engineering,Engineering Manager,Pro,48.74,2022-09-08,Active,briannawilliams
+USR9A8BF59E65B4,Jennifer Shannon,Frontend,UI/UX Engineer,Free,35.98,2022-08-30,On-Leave,justinzhang
+USRF222B404E1C6,Nicole Singh,Mobile,Mobile Engineer,Enterprise,62.85,2022-05-16,Inactive,kirk08
+USR5DEEFAEB54C5,Curtis Moore,Security,Security Engineer,Pro,122.54,2022-04-28,Active,james57
+USRDFAEA86BA088,Seth Bailey,Backend,Backend Lead,Pro,93.23,2022-09-15,Active,bmorris
+USR306C1E139A1D,Amanda Bradford,Data Science,Data Scientist,Enterprise,112.95,2022-03-02,Active,stokeswilliam
+USRAAA97A7A020C,Travis Evans,DevOps,Platform Lead,Enterprise,107.19,2022-04-13,Active,helen75
+USR4C3E06C20CDA,Dominique Day,Engineering,Staff Engineer,Free,44.69,2022-06-14,Active,jodyjenkins
+USRAF78998AA840,Carol Morton,Frontend,Frontend Engineer,Enterprise,101.9,2022-04-12,Active,mcneilmichael
+USR7348A1025E41,Jay Gray,Mobile,iOS Engineer,Pro,36.02,2022-01-30,Inactive,dylan41
+USR88FCBC25C2E3,Jonathon Morris,Security,Security Lead,Free,122.63,2022-08-15,Active,sarah63
+USRD53B45CFCCF9,Austin Black,Backend,API Specialist,Enterprise,129.39,2022-01-16,Inactive,emily86
+USR3215E3E3B3C3,Victoria Duran,Data Science,Data Scientist,Pro,72.14,2022-08-06,Inactive,stephen60
+USR53D30931F483,Daniel Moreno,DevOps,SRE,Free,132.21,2022-04-02,Inactive,christina01
+USR726EB7AB60CB,James Palmer,Engineering,Senior Engineer,Free,112.34,2022-05-10,Active,
+USR930B0BEB5134,Andrew Allen,Frontend,UI/UX Engineer,Free,120.13,2022-04-14,Active,robert40
+USR9A8C35A8371A,Darryl Miranda,Mobile,Android Engineer,Enterprise,125.15,2022-03-28,Active,cwalls
+USRAC008F3BE27C,Kevin Taylor,Security,AppSec Analyst,Pro,126.49,2022-03-28,Active,xavier46
+USR2A7FB5FD967C,Ashley Gilmore,Backend,Backend Engineer,Pro,42.29,2022-04-19,Active,sanchezlisa
+USR892553C3E581,Christine Harmon,Data Science,Analytics Lead,Pro,91.3,2022-01-11,Active,jeffreyhancock
+USR075B6BAAE47B,Mr. Kyle Harrison Jr.,DevOps,SRE,Enterprise,62.87,2022-02-12,Active,belljames
+USRA2C0F68ED6F7,Victoria Parker,Engineering,Staff Engineer,Pro,98.65,2022-07-18,Active,jwest
+USR2CDEF21C2870,Anthony Norman,Frontend,Frontend Lead,Enterprise,80.79,2022-07-21,Inactive,
+USR68B626790C45,David Cooper,Mobile,Android Engineer,Pro,112.39,2022-03-18,Active,alewis
+USR08B82CEA594C,Raymond Gamble,Security,Security Engineer,Free,100.43,2022-09-15,Active,ashleelewis
+USRB1BB4B6D94B1,Cole Stevens,Backend,Backend Lead,Free,105.02,2022-05-07,Active,carol23
+USR385FC5252449,Richard Hill,Data Science,ML Engineer,Pro,104.82,2022-05-28,Active,nmoore
+USR1519BC2CFF86,John Turner,DevOps,DevOps Engineer,Pro,92.53,2022-01-01,Active,robertsaunders
+USRD4E4790AE18C,Phillip Moore,Engineering,Senior Engineer,Pro,103.74,2022-06-30,Active,john45
+USRA8B90CFBA41A,John Shannon,Frontend,Frontend Lead,Enterprise,129.62,2022-03-07,Active,gilberttina
+USR3DCCF6A4298B,Paula Hernandez,Mobile,iOS Engineer,Pro,70.19,2022-04-02,Active,gthompson
+USREB5014EFC5B3,Mary Vargas,Security,Security Engineer,Free,39.85,2022-07-04,Active,
+USR49DCB71A8087,Devin Powell,Backend,Backend Engineer,Pro,95.45,2022-09-28,Active,patriciasteele
+USR93CEF1507238,Phillip Blanchard,Data Science,ML Engineer,Enterprise,35.58,2022-02-11,Active,caldwelldaniel
+USR231775C9108F,Stefanie Lucas,DevOps,DevOps Engineer,Enterprise,89.39,2022-01-20,Active,ehowell
+USRC704A9E09392,Valerie Bush,Engineering,Senior Engineer,Pro,105.1,2022-08-06,Active,howardtimothy
+USR2D9E7C912FC7,Marissa Vasquez,Frontend,UI/UX Engineer,Pro,88.0,2022-08-01,Active,brittanytorres
+USR5BB3FC32273D,Charles Shea,Mobile,Mobile Engineer,Pro,62.22,2022-04-07,Active,josephferguson
+USR3A0A9F5B576B,Gregory Butler,Security,AppSec Analyst,Pro,100.81,2022-04-17,Active,carla69
+USR5EBD55BA5E55,Dr. Clinton Gonzalez Jr.,Backend,Backend Lead,Enterprise,68.57,2022-07-29,Active,robertcaldwell
+USR62F5932D6121,Samuel Tucker,Data Science,Data Scientist,Enterprise,109.17,2022-01-25,Active,hartmichele
+USR0E31AADE17FB,Robert Phillips,DevOps,SRE,Pro,56.72,2022-06-13,Active,michelle90
+USR0F698FEC835C,Mr. Chad Long,Engineering,Engineering Manager,Free,127.47,2022-08-12,Active,
+USR814E1345C9BD,Shelley Erickson,Frontend,Frontend Engineer,Free,75.95,2022-06-12,Active,keith73
+USRC5E111DA7D40,Gerald Sanders,Mobile,Android Engineer,Pro,58.16,2022-03-27,Active,john68
+USR6DF9192E0813,Kevin Williams,Security,AppSec Analyst,Enterprise,106.31,2022-06-07,Active,maryarroyo
+USR57775E872CBF,Robert Miller,Backend,API Specialist,Free,91.08,2022-06-03,Active,jpierce
+USR3B4F1F49DD77,Brenda Diaz,Data Science,Analytics Lead,Enterprise,49.25,2022-06-29,Active,julian95
+USR0F3535B9A801,Eric Nguyen,DevOps,SRE,Pro,69.32,2022-05-28,Active,larsoncynthia
+USR610E8ED01166,Eric Mckinney,Engineering,Staff Engineer,Enterprise,37.04,2022-07-29,Active,
+USRF7E9C53C4D0E,Andrea Armstrong,Frontend,UI/UX Engineer,Enterprise,135.51,2022-01-16,Active,
+USRC08848773723,Thomas Cortez,Mobile,Mobile Engineer,Enterprise,51.0,2022-02-19,Active,
+USRA546B264AAE1,Jacqueline Garner,Security,Security Engineer,Pro,108.44,2022-05-24,Active,bevans
+USRB386CBD180B8,Charles Hobbs,Backend,Backend Lead,Free,116.67,2022-03-05,On-Leave,zthomas
+USR7535D13F510D,Mary Turner,Data Science,Data Scientist,Pro,95.46,2022-05-26,Active,mendozajonathan
