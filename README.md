@@ -15,7 +15,7 @@ AIFORGE is an end-to-end data intelligence platform that processes AI usage logs
 ---
 ## 🚀 Live demo
 
-🔗 **Dashboard (Live):** [https://ai-forge-analytics1.streamlit.app/](https://aiforgeanalytics.streamlit.app)
+🔗 **Dashboard (Live):** [https://ai-forge-analytics1.streamlit.app](https://aiforgeanalytics.streamlit.app)
 
 > **NOTE:** The dashboard is hosted on Streamlit's free tier and may occasionally crash or run out of memory.
 > If the site is down, please email `perimilisunil@gmail.com` and I will restart the app and ensure it runs as expected.
