@@ -718,18 +718,17 @@ def main():
             ba_agg.columns = ["department","period","mean_hours"]
             ba_agg["mean_hours"] = ba_agg["mean_hours"].round(1)
 
-        fig_ba = px.bar(
-                ba_agg, x="department", y="mean_hours", color="period",
-                barmode="group", title="Avg Cycle Time: Before vs After (hours)",
-                color_discrete_map={"Before":"#f0883e","After":"#3fb950"},
-                text="mean_hours",
-                labels={"mean_hours":"Avg Hours","department":"","period":"Period"},
+        fig_ba = px.bar(ba_agg, x="department", y="mean_hours", color="period",
+            barmode="group", title="Avg Cycle Time: Before vs After (hours)",
+            color_discrete_map={"Before":"#f0883e","After":"#3fb950"},
+            text="mean_hours",
+            labels={"mean_hours":"Avg Hours","department":"","period":"Period"},
             )
         fig_ba.update_layout(height=360, **dark())
         fig_ba.update_traces(
-                texttemplate="%{text:.1f}h", textposition="outside",
-                marker_line_width=0,
-                hovertemplate="%{x}<br>%{fullData.name}: %{y:.1f} hrs<extra></extra>"
+            texttemplate="%{text:.1f}h", textposition="outside",
+            marker_line_width=0,
+            hovertemplate="%{x}<br>%{fullData.name}: %{y:.1f} hrs<extra></extra>"
             )
         st.plotly_chart(fig_ba, use_container_width=True)
 
