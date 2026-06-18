@@ -22,15 +22,14 @@ env/
 ENV/
 
 # Database
-*.db
 *.sqlite
 *.sqlite3
 
 # Data
 data/raw/
 data/processed/
+data/synthetic/
 *.parquet
-
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb_checkpoints/
