@@ -259,7 +259,6 @@ with c4:
         st.plotly_chart(fig_rv, use_container_width=True)
 
 # ── Row 4 ─────────────────────────────────────────────────
-c5, c6 = st.columns(2)
 with c5:
     st.markdown('<p class="sec-hdr">Monthly PR Throughput</p>',
                 unsafe_allow_html=True)
@@ -284,30 +283,6 @@ with c5:
             hovertemplate="%{x}: %{y:,} PRs<extra></extra>"
         )
         st.plotly_chart(fig_th, use_container_width=True)
-
-with c6:
-    st.markdown('<p class="sec-hdr">Review Depth vs Cycle Time</p>',
-                unsafe_allow_html=True)
-    if not gh.empty and "review_count" in gh.columns:
-        sc = gh[
-            (gh["cycle_time_hours"] > 0) &
-            (gh["cycle_time_hours"] < 500)
-        ].sample(min(500, len(gh)), random_state=42)
-        fig_sc = px.scatter(
-            sc, x="review_count", y="cycle_time_hours",
-            color="department", trendline="ols",
-            color_discrete_sequence=C, opacity=0.6,
-            labels={"review_count":"Review Comments",
-                    "cycle_time_hours":"Cycle Time (h)",
-                    "department":"Dept"},
-        )
-        fig_sc.update_layout(title="Does More Review = Slower Merge?",
-                             height=280, **_D)
-        fig_sc.update_traces(
-            marker=dict(size=5, line=dict(width=0)),
-            hovertemplate="%{x} reviews → %{y:.1f}h<extra>%{fullData.name}</extra>"
-        )
-        st.plotly_chart(fig_sc, use_container_width=True)
 
 # ── Tables ────────────────────────────────────────────────
 st.markdown('<p class="sec-hdr">Top 20 Contributors — by PRs Merged</p>',
