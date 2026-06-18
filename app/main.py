@@ -18,7 +18,7 @@ from datetime import datetime
 ROOT = Path(__file__).parent.parent.resolve()
 sys.path.insert(0, str(ROOT))
 
-from src.config import DB_PATH, CACHE_TTL
+from src.config import DB_PATH, CACHE_TTL, TARGET_REPOS, COPILOT_LAUNCH_DATE, DEPARTMENTS
 from src.data.loader import load_users, load_usage_logs, load_jira, load_github
 from src.data.preprocessor import (
     enrich_usage_logs, compute_dept_performance, compute_user_summary
@@ -668,17 +668,42 @@ def main():
                                 customdata=model_agg[["total_cost"]].values)
             st.plotly_chart(fig_m, use_container_width=True)
 
-        dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
-        fig_dm = px.bar(
-            dm, x="department", y="cost_usd", color="model_name",
-            title="Cost Breakdown: Department × Model",
-            color_discrete_sequence=C, barmode="stack",
-            labels={"cost_usd":"Cost (USD)","department":"","model_name":"Model"},
-        )
-        fig_dm.update_layout(height=300, **dark())
-        fig_dm.update_traces(marker_line_width=0,
-                             hovertemplate="%{x}<br>%{fullData.name}: $%{y:,.3f}<extra></extra>")
-        st.plotly_chart(fig_dm, use_container_width=True)
+        col_u3, col_u4 = st.columns(2)
+
+        with col_u3:
+            if "hour" not in logs.columns:
+                logs["hour"] = pd.to_datetime(logs["timestamp"], errors="coerce").dt.hour
+            if "day_name" not in logs.columns:
+                logs["day_name"] = pd.to_datetime(logs["timestamp"], errors="coerce").dt.day_name()
+            dow_order = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+            hm_data   = logs.groupby(["day_name","hour"])["token_count"].sum().reset_index()
+            pivot     = hm_data.pivot_table(index="day_name", columns="hour",
+                                            values="token_count", fill_value=0)
+            pivot     = pivot.reindex([d for d in dow_order if d in pivot.index])
+            fig_hm = px.imshow(
+                pivot, title="Usage Heatmap — Day × Hour of Day",
+                color_continuous_scale=["#0d1117","#1f6feb","#58a6ff","#f0883e"],
+                labels={"color":"Tokens","x":"Hour (UTC)","y":"Day"},
+                aspect="auto",
+            )
+            fig_hm.update_layout(height=300, **dark())
+            fig_hm.update_traces(
+                hovertemplate="%{y} %{x}:00 — %{z:,} tokens<extra></extra>"
+            )
+            st.plotly_chart(fig_hm, use_container_width=True)
+
+        with col_u4:
+            dm = logs.groupby(["department","model_name"])["cost_usd"].sum().reset_index()
+            fig_dm = px.bar(
+                dm, x="department", y="cost_usd", color="model_name",
+                title="Cost Breakdown: Department × Model",
+                color_discrete_sequence=C, barmode="stack",
+                labels={"cost_usd":"Cost (USD)","department":"","model_name":"Model"},
+            )
+            fig_dm.update_layout(height=300, **dark())
+            fig_dm.update_traces(marker_line_width=0,
+                                 hovertemplate="%{x}<br>%{fullData.name}: $%{y:,.3f}<extra></extra>")
+            st.plotly_chart(fig_dm, use_container_width=True)
 
         # Monthly trend
         st.markdown('<p class="sec-hdr">Month-over-Month Trend</p>', unsafe_allow_html=True)
@@ -707,10 +732,13 @@ def main():
     with t3:
         st.markdown('<p class="sec-hdr">Jira Ticket Cycle Time: Before vs After AI</p>',
                     unsafe_allow_html=True)
-        
-        ba = D["jira"].copy()
-        if dept != "All":
-            ba = ba[ba["department"] == dept]
+
+        col_p1, col_p2 = st.columns(2)
+
+        with col_p1:
+            ba = D["jira"].copy()
+            if dept != "All":
+                ba = ba[ba["department"] == dept]
             ba_agg = (
                 ba.groupby(["department","period"])["cycle_time_hours"]
                 .mean().reset_index()
@@ -718,20 +746,43 @@ def main():
             ba_agg.columns = ["department","period","mean_hours"]
             ba_agg["mean_hours"] = ba_agg["mean_hours"].round(1)
 
-        fig_ba = px.bar(ba_agg, x="department", y="mean_hours", color="period",
-            barmode="group", title="Avg Cycle Time: Before vs After (hours)",
-            color_discrete_map={"Before":"#f0883e","After":"#3fb950"},
-            text="mean_hours",
-            labels={"mean_hours":"Avg Hours","department":"","period":"Period"},
+            fig_ba = px.bar(
+                ba_agg, x="department", y="mean_hours", color="period",
+                barmode="group", title="Avg Cycle Time: Before vs After (hours)",
+                color_discrete_map={"Before":"#f0883e","After":"#3fb950"},
+                text="mean_hours",
+                labels={"mean_hours":"Avg Hours","department":"","period":"Period"},
             )
-        fig_ba.update_layout(height=360, **dark())
-        fig_ba.update_traces(
-            texttemplate="%{text:.1f}h", textposition="outside",
-            marker_line_width=0,
-            hovertemplate="%{x}<br>%{fullData.name}: %{y:.1f} hrs<extra></extra>"
+            fig_ba.update_layout(height=360, **dark())
+            fig_ba.update_traces(
+                texttemplate="%{text:.1f}h", textposition="outside",
+                marker_line_width=0,
+                hovertemplate="%{x}<br>%{fullData.name}: %{y:.1f} hrs<extra></extra>"
             )
-        st.plotly_chart(fig_ba, use_container_width=True)
+            st.plotly_chart(fig_ba, use_container_width=True)
 
+        with col_p2:
+            dp = dept_perf.copy()
+            if not dp.empty and "pct_improvement" in dp.columns:
+                fig_imp = px.bar(
+                    dp.sort_values("pct_improvement"),
+                    x="pct_improvement", y="department", orientation="h",
+                    title="Efficiency Gain per Department (%)",
+                    color="pct_improvement",
+                    color_continuous_scale=["#21262d","#3fb950"],
+                    text="pct_improvement",
+                    labels={"pct_improvement":"% Improvement","department":""},
+                )
+                fig_imp.update_layout(height=360, showlegend=False,
+                                      coloraxis_showscale=False, **dark())
+                fig_imp.update_traces(
+                    texttemplate="%{text:.1f}%", textposition="outside",
+                    marker_line_width=0,
+                    hovertemplate="%{y}: %{x:.1f}% improvement<extra></extra>"
+                )
+                st.plotly_chart(fig_imp, use_container_width=True)
+            else:
+                st.info("No department performance data under current filters.")
 
         col_p3, col_p4 = st.columns(2)
 
@@ -797,22 +848,23 @@ def main():
                 "throughput_lift_pct":   "{:.1f}%",
             }), use_container_width=True)
 
+
         # ── GitHub PR Analytics (live or synthetic) ──────────────────
         st.markdown('<p class="sec-hdr">GitHub PR Analytics — Real Data · Copilot Boundary: 21 Jun 2022</p>',
                     unsafe_allow_html=True)
 
-        gh_delta    = D["gh_delta"].copy()
-        gh_top      = D["gh_top"].copy()
-        gh_repos    = D["gh_repos"].copy()
-        gh_monthly  = D["gh_monthly"].copy()
-        gh_data     = D["github"].copy()
+        gh_delta   = D["gh_delta"].copy()
+        gh_top     = D["gh_top"].copy()
+        gh_repos   = D["gh_repos"].copy()
+        gh_monthly = D["gh_monthly"].copy()
+        gh_data    = D["github"].copy()
 
         if dept != "All":
-            gh_delta   = gh_delta[gh_delta["department"] == dept] if not gh_delta.empty and "department" in gh_delta.columns else gh_delta
-            gh_repos   = gh_repos[gh_repos["department"] == dept] if not gh_repos.empty and "department" in gh_repos.columns else gh_repos
+            gh_delta   = gh_delta[gh_delta["department"]   == dept] if not gh_delta.empty and "department" in gh_delta.columns else gh_delta
+            gh_repos   = gh_repos[gh_repos["department"]   == dept] if not gh_repos.empty and "department" in gh_repos.columns else gh_repos
             gh_monthly = gh_monthly[gh_monthly["department"] == dept] if not gh_monthly.empty and "department" in gh_monthly.columns else gh_monthly
-            gh_data    = gh_data[gh_data["department"] == dept] if not gh_data.empty and "department" in gh_data.columns else gh_data
-            gh_top     = gh_top[gh_top["department"] == dept] if not gh_top.empty and "department" in gh_top.columns else gh_top
+            gh_data    = gh_data[gh_data["department"]     == dept] if not gh_data.empty and "department" in gh_data.columns else gh_data
+            gh_top     = gh_top[gh_top["department"]       == dept] if not gh_top.empty and "department" in gh_top.columns else gh_top
 
         if gh_data.empty:
             st.markdown("""<div class="alert-info">
@@ -820,36 +872,133 @@ def main():
                 <code>python scripts/run_pipeline.py --mode live</code>
             </div>""", unsafe_allow_html=True)
 
-        # ── Repo breakdown table ───────────────────────────
-        st.markdown('<p class="sec-hdr">Repository Breakdown — All 19 Repos</p>',
+        col_gh1, col_gh2 = st.columns(2)
+
+        with col_gh1:
+            if not gh_delta.empty and "pct_improvement" in gh_delta.columns:
+                fig_ghd = px.bar(
+                    gh_delta.sort_values("pct_improvement"),
+                    x="pct_improvement", y="department", orientation="h",
+                    title="PR Cycle Time Improvement: Before vs After Copilot (%)",
+                    color="pct_improvement",
+                    color_continuous_scale=["#21262d", "#58a6ff"],
+                    text="pct_improvement",
+                    labels={"pct_improvement": "% Faster", "department": ""},
+                )
+                fig_ghd.update_layout(height=320, showlegend=False,
+                                       coloraxis_showscale=False, **dark())
+                fig_ghd.update_traces(
+                    texttemplate="%{text:.1f}%", textposition="outside",
+                    marker_line_width=0,
+                    hovertemplate="%{y}: %{x:.1f}% faster PRs after Copilot<extra></extra>"
+                )
+                st.plotly_chart(fig_ghd, use_container_width=True)
+            else:
+                st.info("GitHub delta data unavailable.")
+
+        with col_gh2:
+            if not gh_delta.empty and "before_avg" in gh_delta.columns and "after_avg" in gh_delta.columns:
+                melt = gh_delta.melt(
+                    id_vars=["department"],
+                    value_vars=["before_avg", "after_avg"],
+                    var_name="period", value_name="avg_cycle_hours"
+                )
+                melt["period"] = melt["period"].map({"before_avg": "Before", "after_avg": "After"})
+                fig_ghba = px.bar(
+                    melt, x="department", y="avg_cycle_hours", color="period",
+                    barmode="group",
+                    title="Avg PR Merge Time: Before vs After Copilot (hours)",
+                    color_discrete_map={"Before": "#f0883e", "After": "#58a6ff"},
+                    text="avg_cycle_hours",
+                    labels={"avg_cycle_hours": "Avg Hours", "department": "", "period": "Period"},
+                )
+                fig_ghba.update_layout(height=320, **dark())
+                fig_ghba.update_traces(
+                    texttemplate="%{text:.1f}h", textposition="outside",
+                    marker_line_width=0,
+                    hovertemplate="%{x} | %{fullData.name}: %{y:.1f}h<extra></extra>"
+                )
+                st.plotly_chart(fig_ghba, use_container_width=True)
+
+        col_gh3, col_gh4 = st.columns(2)
+
+        with col_gh3:
+            if not gh_monthly.empty and "month" in gh_monthly.columns:
+                fig_ghm = px.line(
+                    gh_monthly, x="month", y="avg_cycle", color="department",
+                    title="Monthly PR Cycle Time Trend by Department",
+                    color_discrete_sequence=C,
+                    labels={"month": "Month", "avg_cycle": "Avg Hours", "department": "Dept"},
+                    markers=False,
+                )
+                # Mark Copilot launch
+                copilot_date = pd.to_datetime(COPILOT_LAUNCH_DATE)
+
+                fig_ghm.add_vline(
+                    x=copilot_date,
+                    line_dash="dash",
+                    line_color="#f0883e",
+                )
+
+                fig_ghm.add_annotation(
+                    x=copilot_date,
+                    y=gh_monthly["avg_cycle"].max(),
+                    text="Copilot Launch",
+                    showarrow=True,
+                    arrowhead=2,
+                    font=dict(color="#f0883e")
+
+                )
+                fig_ghm.update_layout(height=300, **dark())
+                fig_ghm.update_traces(
+                    hovertemplate="%{x}: %{y:.1f}h<extra>%{fullData.name}</extra>",
+                    line=dict(width=1.5)
+                )
+                st.plotly_chart(fig_ghm, use_container_width=True)
+
+        with col_gh4:
+            if not gh_data.empty and "rework_ratio" in gh_data.columns:
+                rw = gh_data.groupby(["department", "period"])["rework_ratio"].mean().reset_index()
+                fig_rw = px.bar(
+                    rw, x="department", y="rework_ratio", color="period",
+                    barmode="group",
+                    title="Code Rework Ratio by Department (Lower = Better)",
+                    color_discrete_map={"Before": "#f0883e", "After": "#3fb950"},
+                    text="rework_ratio",
+                    labels={"rework_ratio": "Rework Ratio", "department": "", "period": "Period"},
+                )
+                fig_rw.update_layout(height=300, **dark())
+                fig_rw.update_traces(
+                    texttemplate="%{text:.3f}", textposition="outside",
+                    marker_line_width=0,
+                    hovertemplate="%{x} | %{fullData.name}: %{y:.3f}<extra></extra>"
+                )
+                st.plotly_chart(fig_rw, use_container_width=True)
+
+        # Repo breakdown table
+        st.markdown('<p class="sec-hdr">Repository Breakdown — PR Volume & Cycle Time</p>',
                     unsafe_allow_html=True)
         if not gh_repos.empty:
             disp_repos = gh_repos.copy()
-            if "avg_cycle"  in disp_repos.columns:
-                disp_repos["avg_cycle"]  = disp_repos["avg_cycle"].apply(lambda v: f"{v:.1f}h")
+            if "avg_cycle" in disp_repos.columns:
+                disp_repos["avg_cycle"] = disp_repos["avg_cycle"].apply(lambda v: f"{v:.1f}h")
             if "avg_rework" in disp_repos.columns:
                 disp_repos["avg_rework"] = disp_repos["avg_rework"].apply(lambda v: f"{v:.3f}")
-            if "pr_count"   in disp_repos.columns:
-                disp_repos["pr_count"]   = disp_repos["pr_count"].apply(lambda v: f"{int(v):,}")
-            st.dataframe(disp_repos, use_container_width=True)
+            st.dataframe(disp_repos, use_container_width=True, height=280)
 
-        # ── Efficiency delta summary table ─────────────────
-        st.markdown('<p class="sec-hdr">Department Efficiency Delta Summary</p>',
+        # Top contributors
+        st.markdown('<p class="sec-hdr">Top GitHub Contributors (by PRs Merged)</p>',
                     unsafe_allow_html=True)
-        if not gh_delta.empty:
-            st.dataframe(
-                gh_delta.style.format({
-                    "before_avg":            "{:.1f}h",
-                    "after_avg":             "{:.1f}h",
-                    "hours_saved":           "{:.1f}h",
-                    "pct_improvement":       "{:.1f}%",
-                    "before_rework":         "{:.3f}",
-                    "after_rework":          "{:.3f}",
-                    "rework_improvement_pct":"{:.1f}%",
-                }),
-                use_container_width=True,
-                height=300,
-            )
+        if not gh_top.empty:
+            disp_top = gh_top.copy()
+            if "avg_cycle" in disp_top.columns:
+                disp_top["avg_cycle"] = disp_top["avg_cycle"].apply(lambda v: f"{v:.1f}h")
+            if "avg_rework" in disp_top.columns:
+                disp_top["avg_rework"] = disp_top["avg_rework"].apply(lambda v: f"{v:.3f}")
+            if "total_lines" in disp_top.columns:
+                disp_top["total_lines"] = disp_top["total_lines"].apply(lambda v: f"{int(v):,}")
+            st.dataframe(disp_top, use_container_width=True)
+
     # ───────────────────────────────────────────────────
     # TAB 4 — GOVERNANCE & SECURITY
     # ───────────────────────────────────────────────────
