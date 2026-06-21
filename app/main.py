@@ -3,7 +3,7 @@ from pathlib import Path
 from narwhals import col
 import numpy as np
 import pandas as pd
-import plotly.express as px
+import plotly.express as pxIST
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
@@ -474,7 +474,7 @@ def main():
     
     header_text += (
         f" · Last Refreshed "
-        f"{datetime.now().strftime('%H:%M IST')}"
+        f"{datetime.now().strftime('%H:%M UTC')}"
     )
 
     st.caption(header_text)
